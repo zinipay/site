@@ -46,6 +46,7 @@ const IdPage = ({ params }) => {
         localStorage.setItem(localStorageKey, JSON.stringify(freshData));
       } catch (err) {
         console.error("Failed to load landing page data:", err);
+        setPageData()
       } finally {
         setLoading(false);
       }
