@@ -1,0 +1,29 @@
+{
+  "name": "product-landing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "clean": "rimraf .next out",
+    "clean:build": "npm run clean && npm run build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "next": "14.2.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.5.0",
+    "sharp": "^0.34.1",
+    "sonner": "^2.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "postcss": "^8",
+    "rimraf": "^5.0.10",
+    "tailwindcss": "^3.4.1"
+  }
+}
