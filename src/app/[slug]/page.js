@@ -24,6 +24,7 @@ const IdPage = ({ params }) => {
     if (!slug) return; // slug না থাকলে ডেটা ফেচ হবে না
 
     const localStorageKey = `landingPageData_${slug}`;
+    // fetch from the local storage 
     const localData = localStorage.getItem(localStorageKey);
     if (localData) {
       try {
