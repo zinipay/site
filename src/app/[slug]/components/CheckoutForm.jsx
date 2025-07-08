@@ -38,7 +38,8 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
   const [orderQuantity, setOrderQuantity] = useState(1);
   // FIX: Added isSubmitting state for loading feedback
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isSubmitted, setIsSubmited] = useState(false);
+  const [orderCompletedData, setOrderCompletedData] = useState(null);
   const handleIncreaseQuantity = () => {
     const maxQuantity = productInfo.quantity || 10;
     if (orderQuantity < maxQuantity) {
@@ -103,7 +104,7 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
       if (
         response.data.success &&
         response?.data?.paymentData?.payment_url &&
-        paymentMethod != "cashOnDelivery"
+        selectedPaymentMethod != "cashOnDelivery"
       ) {
         // This is an online payment, redirect the user
         window.location.href = response?.data?.paymentData?.payment_url;
@@ -114,8 +115,16 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
         // Reset the form on success
         setCustomerInfo({ fullName: "", address: "", phone: "", email: "" });
         setOrderQuantity(1);
-      } else if (response.data.success && paymentMethod == "cashOnDelivery") {
-        toast.success(response.data.message || `Hi ${customerInfo?.fullName}, Thank you for your order! We’ve received it and your Order ID is: ${response?.data?.order?.id}. Please prepare the payment upon delivery.`)
+      } else if (
+        response.data.success &&
+        selectedPaymentMethod == "cashOnDelivery"
+      ) {
+        toast.success(
+          response.data.message ||
+            `Hi ${customerInfo?.fullName}, Thank you for your order! We’ve received it and your Order ID is: ${response?.data?.order?.id}. Please prepare the payment upon delivery.`
+        );
+        setOrderCompletedData(response?.data?.order);
+        setIsSubmited(true);
       } else {
         toast.info(`অর্ডার গ্রহণ হয়নি।`);
       }
@@ -140,6 +149,73 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
             100
         )
       : 0;
+
+  if (isSubmitted) {
+    return (
+      <section className="py-20 bg-green-50 text-center">
+        <div className="container mx-auto px-4 max-w-xl bg-white rounded-2xl shadow-lg p-8">
+          <div className="flex justify-center mb-6">
+            <div className="bg-green-100 text-green-600 p-4 rounded-full">
+              <svg
+                className="w-10 h-10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-green-700 mb-4">
+            অর্ডার সম্পন্ন হয়েছে!
+          </h2>
+          <p className="text-gray-700 mb-2">
+            ধন্যবাদ,{" "}
+            <span className="font-semibold text-green-700">
+              {customerInfo.fullName || ""}
+            </span>
+            !
+          </p>
+          <p className="text-gray-600 mb-1">
+            আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।
+          </p>
+
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="bg-green-100 text-green-800 rounded-lg px-4 py-3 mb-4 inline-block">
+              <p className="font-semibold">
+                অর্ডার আইডি:{" "}
+                <span className="font-mono">
+                  {orderCompletedData?.id || "—"}
+                </span>
+              </p>
+              <p>
+                নাম:{" "}
+                <span className="font-medium">{customerInfo.fullName}</span>
+              </p>
+              <p>
+                ঠিকানা:{" "}
+                <span className="font-medium whitespace-pre-line">
+                  {customerInfo.address}
+                </span>
+              </p>
+            </div>
+
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition duration-300"
+            >
+              আবার অর্ডার করব
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="checkout-form" className="py-20 bg-slate-100">
