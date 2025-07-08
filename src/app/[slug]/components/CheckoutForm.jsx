@@ -100,7 +100,11 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
       console.log("Order response:", response.data);
 
       // FIX: Handle the response to redirect to the payment gateway if a URL is provided
-      if (response.data.success && response?.data?.paymentData?.payment_url) {
+      if (
+        response.data.success &&
+        response?.data?.paymentData?.payment_url &&
+        paymentMethod != "cashOnDelivery"
+      ) {
         // This is an online payment, redirect the user
         window.location.href = response?.data?.paymentData?.payment_url;
         // This is a Cash on Delivery order or another method that doesn't require redirection
@@ -110,6 +114,8 @@ const CheckoutForm = ({ productInfo, brandId, landingPageId }) => {
         // Reset the form on success
         setCustomerInfo({ fullName: "", address: "", phone: "", email: "" });
         setOrderQuantity(1);
+      } else if (response.data.success && paymentMethod == "cashOnDelivery") {
+        toast.success(response.data.message || `Hi ${customerInfo?.fullName}, Thank you for your order! We’ve received it and your Order ID is: ${response?.data?.order?.id}. Please prepare the payment upon delivery.`)
       } else {
         toast.info(`অর্ডার গ্রহণ হয়নি।`);
       }
