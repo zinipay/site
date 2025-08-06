@@ -113,7 +113,7 @@ const VerifyPage = () => {
         <div className="bg-gray-100 min-h-screen font-sans p-4 sm:p-6 lg:p-8 flex items-center justify-center">
             <div className="max-w-2xl w-full mx-auto">
                 <header className="mb-6 text-center">
-                    <h1 className="text-4xl font-bold text-gray-800">ZiniPay</h1>
+                    {/* <h1 className="text-4xl font-bold text-gray-800">ZiniPay</h1> */}
                     <p className="text-gray-500 mt-1">Transaction Verification</p>
                 </header>
 
@@ -124,9 +124,9 @@ const VerifyPage = () => {
                                 <StatusIcon status={currentState} />
                             </div>
                             <div className="flex-grow">
-                                <h2 className={`text-2xl font-bold ${currentConfig.textColor}`}>
+                                <h4 className={`text-xl md:text-2xl font-bold ${currentConfig.textColor}`}>
                                     {loading ? 'Verifying Payment...' : (error || message)}
-                                </h2>
+                                </h4>
                                 {!error && !loading && <p className="text-gray-600">Order ID: #{transaction?.id}</p>}
                             </div>
                         </div>
